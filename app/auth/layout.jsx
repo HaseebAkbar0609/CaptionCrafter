@@ -1,22 +1,24 @@
 import { Captions } from "lucide-react";
+import Link from "next/link";
 
 export default function AuthPageLayout({children}) {
   return (
-    <div className=" min-h-svh  flex flex-col gap-4 p-6 md:p-10">
+    <div className=" min-h-svh  flex flex-col gap-4 p-6 md:p-8">
       <div className="flex justify-center gap-2 md:justify-start">
-        <a href="#" className="flex items-center gap-2 font-medium">
-          <div className=" text-primary-foreground bg-primary flex size-6 items-center justify-center rounded-md">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-medium text-lg "
+        >
+          <div className=" text-primary-foreground bg-primary  flex size-7 items-center justify-center rounded-md">
             {/* <GalleryVerticalEnd /> */}
-            <Captions className="size-4" />
+            <Captions className="size-5" />
             {/* <Image src="/short-logo.png" width="80" height="80"></Image> */}
           </div>
           Caption Crafter.
-        </a>
+        </Link>
       </div>
       <div className="flex flex-1 items-center justify-center">
-        <div className="w-full max-w-xs">
-         {children}
-        </div>
+        <div className="w-full max-w-xs">{children}</div>
       </div>
     </div>
   );

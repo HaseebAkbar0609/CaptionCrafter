@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/login-form";
+import { SignUpForm } from "@/components/signup-form";
 
 
 
@@ -9,7 +10,7 @@ export default async function AuthPage({params}) {
   if(auth?.toLowerCase() === "login"){
     return(<LoginForm />);
   }else if(auth?.toLowerCase() === "signup"){
-    return <div>Sign up</div>;
+    return <SignUpForm/>;
   }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
