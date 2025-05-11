@@ -92,13 +92,13 @@ export function LoginForm({ className, ...props }) {
           <h1 className="text-2xl font-bold">Login to your account</h1>
         </div>
         <div className="grid gap-6">
-          <div className="grid gap-3">
+          <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="m@example.com"
-              required
+              // required
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -113,7 +113,7 @@ export function LoginForm({ className, ...props }) {
               </span>
             )}
           </div>
-          <div className="grid gap-3">
+          <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
               <a
@@ -126,7 +126,7 @@ export function LoginForm({ className, ...props }) {
             <Input
               id="password"
               type="password"
-              required
+              // required
               {...register("password", {
                 required: "Password is required",
                 minLength: {
