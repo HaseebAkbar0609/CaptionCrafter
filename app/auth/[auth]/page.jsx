@@ -1,4 +1,5 @@
-import LoginPage from "./Login";
+import { LoginForm } from "@/components/login-form";
+
 
 
 
@@ -6,7 +7,7 @@ export default async function AuthPage({params}) {
   const {auth} = await params;
   console.log(auth);
   if(auth?.toLowerCase() === "login"){
-    return(<LoginPage />);
+    return(<LoginForm />);
   }else if(auth?.toLowerCase() === "signup"){
     return <div>Sign up</div>;
   }
