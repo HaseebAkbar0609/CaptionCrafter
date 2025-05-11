@@ -48,3 +48,25 @@ export async function signOutGoogle() {
     return { error };
   }
 }
+
+// Reset password with email
+export async function resetPasswordWithEmail(email) {
+  try {
+    const { sendPasswordResetEmail } = await import("firebase/auth");
+    await sendPasswordResetEmail(auth, email);
+    return { success: true };
+  } catch (error) {
+    return { error };
+  }
+}
+
+// Reset password with code (oobCode)
+export async function resetPasswordWithCode(oobCode, newPassword) {
+  try {
+    const { confirmPasswordReset } = await import("firebase/auth");
+    await confirmPasswordReset(auth, oobCode, newPassword);
+    return { success: true };
+  } catch (error) {
+    return { error };
+  }
+}

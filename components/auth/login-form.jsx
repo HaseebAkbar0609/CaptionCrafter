@@ -22,7 +22,6 @@ export function LoginForm({ className, ...props }) {
 
   // Email/password login
   const onSubmit = async (data) => {
-
     const { email, password } = data;
     const result = await loginWithEmail(email, password);
     if (result.error) {
@@ -30,11 +29,11 @@ export function LoginForm({ className, ...props }) {
       console.log(res);
       if (res === "auth/user-not-found") {
         toaster("User not found", theme);
-      }else if (
+      } else if (
         res === "auth/wrong-password" ||
         res === "auth/invalid-email" ||
         res === "auth/user-disabled" ||
-        res==="auth/invalid-credential"
+        res === "auth/invalid-credential"
       ) {
         toaster("Invalid Credential", theme);
       } else if (res === "auth/too-many-requests") {
@@ -42,7 +41,7 @@ export function LoginForm({ className, ...props }) {
       } else {
         toaster(result.error.message || "Login failed", theme);
       }
-       } else {
+    } else {
       // toaster("Login successful!");
       redirect("/");
       // handle success (e.g., redirect or show message)
@@ -51,11 +50,10 @@ export function LoginForm({ className, ...props }) {
 
   // Google login
   const handleGoogleLogin = async () => {
-    
     const result = await signInWithGoogle();
     if (result.error) {
       toaster("Something went wrong", theme);
-       } else {
+    } else {
       // toaster("Google login successful!");
       redirect("/");
       // handle success (e.g., redirect or show message)
@@ -71,6 +69,9 @@ export function LoginForm({ className, ...props }) {
       >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
+          <p className="text-sm text-muted-foreground">
+            Enter your email and password to access your account.
+          </p>
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">
@@ -97,12 +98,12 @@ export function LoginForm({ className, ...props }) {
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <a
-                href="#"
+              <Link
+                href="/auth/forgotpassword"
                 className="ml-auto text-sm underline-offset-4 hover:underline"
               >
                 Forgot your password?
-              </a>
+              </Link>
             </div>
             <Input
               id="password"
@@ -122,7 +123,7 @@ export function LoginForm({ className, ...props }) {
               </span>
             )}
           </div>
-          
+
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Logging in..." : "Login"}
           </Button>
@@ -154,7 +155,6 @@ export function LoginForm({ className, ...props }) {
           </Link>
         </div>
       </form>
-     
     </>
   );
 }

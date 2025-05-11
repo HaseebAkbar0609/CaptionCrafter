@@ -61,6 +61,9 @@ export function SignUpForm({ className, ...props }) {
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create new account</h1>
+        <p className="text-sm text-muted-foreground">
+          Enter your details to sign up for a new account.
+        </p>
       </div>
       <div className="grid gap-4">
         <div className="grid gap-2">
