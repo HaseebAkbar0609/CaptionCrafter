@@ -79,7 +79,7 @@ export function AppSidebar({ ...props }) {
     avatar: "",
   });
   React.useEffect(() => {
-    console.log("Auth", auth);
+    // console.log("Auth", auth);
     if (auth?.currentUser) {
       setuser({
         name:
