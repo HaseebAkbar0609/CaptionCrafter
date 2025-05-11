@@ -5,12 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import {  useState } from "react";
 import { loginWithEmail, signInWithGoogle } from "../utils/firebase_auth";
-import {  toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+import { toaster } from "@/utils/toaster";
+// import { useTheme } from "next-themes";
 
 export function LoginForm({ className, ...props }) {
+ 
   const {
     register,
     handleSubmit,
@@ -24,28 +27,10 @@ export function LoginForm({ className, ...props }) {
     const { email, password } = data;
     const result = await loginWithEmail(email, password);
     if (result.error) {
-      toast.error(result.error.message || "Login failed", {
-        position: "bottom-right",
-        theme: "colored",
-        style: {
-          borderRadius: "8px",
-          background: "#1a202c",
-          color: "#fff",
-          fontWeight: 500,
-        },
-      });
+      toaster(result.error.message || "Login failed");
       setFirebaseError(result.error.message || "Login failed");
     } else {
-      toast.success("Login successful!", {
-        position: "bottom-right",
-        theme: "colored",
-        style: {
-          borderRadius: "8px",
-          background: "#1a202c",
-          color: "#fff",
-          fontWeight: 500,
-        },
-      });
+      toaster("Login successful!");
       // handle success (e.g., redirect or show message)
     }
   };
@@ -55,28 +40,10 @@ export function LoginForm({ className, ...props }) {
     setFirebaseError("");
     const result = await signInWithGoogle();
     if (result.error) {
-      toast.error(result.error.message || "Google login failed", {
-        position: "bottom-right",
-        theme: "colored",
-        style: {
-          borderRadius: "8px",
-          background: "#1a202c",
-          color: "#fff",
-          fontWeight: 500,
-        },
-      });
+      toaster(result.error.message || "Google login failed");
       setFirebaseError(result.error.message || "Google login failed");
     } else {
-      toast.success("Google login successful!", {
-        position: "bottom-right",
-        theme: "colored",
-        style: {
-          borderRadius: "8px",
-          background: "#1a202c",
-          color: "#fff",
-          fontWeight: 500,
-        },
-      });
+      toaster("Google login successful!");
       // handle success (e.g., redirect or show message)
     }
   };

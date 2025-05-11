@@ -2,7 +2,8 @@
 import "./globals.css";
 import { Poppins } from 'next/font/google';
 import { ThemeProvider } from "@/components/theme-provider"
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
+
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -17,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html >
       <body className={poppins.className}>
         <ThemeProvider
           attribute="class"
@@ -26,19 +27,19 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           {children}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        style={{ zIndex: 9999 }}
-      />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+            theme={'dark'}
+            transition={Zoom}
+          />
         </ThemeProvider>
       </body>
     </html>
