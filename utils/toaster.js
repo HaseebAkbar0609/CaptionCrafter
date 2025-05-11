@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 // const theme=useTheme();
 export const toaster = (s,theme='dark') => {
   toast(s,{
-    theme: theme==="light"?'light':'light',
+    theme: theme==="light"?'light':'dark',
+
   });
 };

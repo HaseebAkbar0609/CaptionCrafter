@@ -2,7 +2,7 @@
 import "./globals.css";
 import { Poppins } from 'next/font/google';
 import { ThemeProvider } from "@/components/theme-provider"
-import { ToastContainer, Zoom } from "react-toastify";
+import { Slide, ToastContainer, Zoom } from "react-toastify";
 
 
 const poppins = Poppins({
@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
           {children}
           <ToastContainer
             position="bottom-right"
-            autoClose={3000}
+            autoClose={10000}
             hideProgressBar
             newestOnTop
             closeOnClick={false}
@@ -38,7 +38,9 @@ export default function RootLayout({ children }) {
             draggable={false}
             pauseOnHover
             theme={'dark'}
-            transition={Zoom}
+            transition={Slide}
+            // className={'my-toast'}
+            
           />
         </ThemeProvider>
       </body>

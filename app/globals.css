@@ -78,7 +78,7 @@
 }
 
 .dark {
-  --background: rgb(18,18,18);
+  --background: rgb(18, 18, 18);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -110,6 +110,16 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-button{
+button {
   cursor: pointer;
+}
+.Toastify__toast {
+  border: 2px solid var(--color-border, #a3a3a3);
+  border-radius: 8px;
+
+  font-family: "Poppins", Arial, sans-serif;
+  font-size: 1rem;
+  
+  font-weight: 500;
+  padding: 12px 18px;
 }
