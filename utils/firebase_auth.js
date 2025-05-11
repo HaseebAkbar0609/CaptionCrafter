@@ -27,6 +27,18 @@ export async function loginWithEmail(email, password) {
   }
 }
 
+// Signup with email and password
+export async function signupWithEmail(email, password) {
+  try {
+    const { createUserWithEmailAndPassword } = await import("firebase/auth");
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const user = result.user;
+    return { user };
+  } catch (error) {
+    return { error };
+  }
+}
+
 // Sign out
 export async function signOutGoogle() {
   try {

@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import {  useState } from "react";
-import { loginWithEmail, signInWithGoogle } from "../utils/firebase_auth";
+import { loginWithEmail, signInWithGoogle } from "@/utils/firebase_auth";
 
 import "react-toastify/dist/ReactToastify.css";
 import { toaster } from "@/utils/toaster";
@@ -73,7 +72,7 @@ export function LoginForm({ className, ...props }) {
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
         </div>
-        <div className="grid gap-6">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
