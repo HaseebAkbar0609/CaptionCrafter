@@ -23,14 +23,20 @@ import ThemeChangeBtn from "@/components/ThemeChangeBtn";
 export default function Layout({ children }) {
   const router = useRouter();
   const [authLoading, setAuthLoading] = useState(true);
+  const [pathname, setPathname] = useState("dashboard");
+
+  useEffect(() => {
+    setPathname(window.location.pathname.split("/").slice(2).join("/"));
+  }, []);
+
+  // console.log("Pathname", pathname);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
         router.replace("/auth/login");
-      }else{
+      } else {
         setAuthLoading(false);
-
       }
     });
     return () => unsubscribe();
@@ -54,17 +60,20 @@ export default function Layout({ children }) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="/dashboard">Dasboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                {
+                  pathname!=="dashboard" && 
+
+                  <BreadcrumbPage>{pathname.charAt(0).toUpperCase() + pathname.slice(1)}</BreadcrumbPage>
+                }
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <ThemeChangeBtn className="ml-auto flex self-end"/>
+           
+            <ThemeChangeBtn className="ml-auto flex self-end" />
           </div>
         </header>
         {children}
