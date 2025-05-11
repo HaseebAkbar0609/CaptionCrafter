@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import auth from "@/config/firebase";
 import Loading from "./Loading";
+import ThemeChangeBtn from "@/components/ThemeChangeBtn";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -63,6 +64,7 @@ export default function Layout({ children }) {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <ThemeChangeBtn className="ml-auto flex self-end"/>
           </div>
         </header>
         {children}

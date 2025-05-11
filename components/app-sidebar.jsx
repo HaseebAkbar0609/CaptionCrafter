@@ -28,23 +28,7 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
+
   navMain: [
     {
       title: "Playground",
@@ -62,30 +46,6 @@ const data = {
         },
         {
           title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-  
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
           url: "#",
         },
       ],
@@ -118,7 +78,7 @@ export function AppSidebar({
   return (
     (<Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher  />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
