@@ -124,3 +124,12 @@ button {
   font-weight: 500;
   padding: 12px 18px;
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
