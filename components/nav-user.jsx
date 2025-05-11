@@ -2,9 +2,11 @@
 
 import {
   BadgeCheck,
+  BarChart2,
   Bell,
   ChevronsUpDown,
   CreditCard,
+  HelpCircle,
   LogOut,
   Sparkles,
 } from "lucide-react"
@@ -12,7 +14,7 @@ import {
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
+  // AvatarImage,
 } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -29,22 +31,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { signOutGoogle } from "@/utils/firebase_auth"
-import { redirect } from "next/navigation"
+import Link from "next/link"
 
 export function NavUser({
   user
 }) {
   const { isMobile } = useSidebar()
-  const LogOutHandler = async() => {
-    const res=await signOutGoogle()
-    if (res) {
-      console.log("User logged out successfully")
-      redirect("/auth/login")
-    } else {
-      console.log("Error logging out user")
-    }
-  }
+ 
 
   return (
     <SidebarMenu>
@@ -58,7 +51,7 @@ export function NavUser({
               <Avatar className="h-8 w-8 rounded-lg">
                 {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
                 <AvatarFallback className="rounded-lg">
-                  {user?.name[0] + user?.name[2] || "GU"}
+                  {user?.name[0] + user?.name[1] || "GU"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -79,7 +72,7 @@ export function NavUser({
                 <Avatar className="h-8 w-8 rounded-lg">
                   {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
                   <AvatarFallback className="rounded-lg">
-                    {user?.name[0] + user?.name[2] || "GU"}
+                    {user?.name[0] + user?.name[1] || "GU"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -90,31 +83,38 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <Link href={"/dashboard/pricing"}>
+                <DropdownMenuItem>
+                  <Sparkles />
+                  Upgrade to Pro
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <Link href={"/dashboard/profile"}>
+                <DropdownMenuItem>
+                  <BadgeCheck />
+                  Account
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <BarChart2 />
+                Analytics
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+                <HelpCircle />
+                Help & Support
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={LogOutHandler}>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <Link href={"/dashboard/logout"}>
+              {" "}
+              <DropdownMenuItem>
+                <LogOut />
+                Log out
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
