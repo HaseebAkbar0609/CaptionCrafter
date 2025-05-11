@@ -10,40 +10,55 @@ import { loginWithEmail, signInWithGoogle } from "../utils/firebase_auth";
 
 import "react-toastify/dist/ReactToastify.css";
 import { toaster } from "@/utils/toaster";
-// import { useTheme } from "next-themes";
+import { useTheme } from "next-themes";
+import { redirect } from "next/navigation";
 
 export function LoginForm({ className, ...props }) {
- 
+  const { theme } = useTheme();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-  const [firebaseError, setFirebaseError] = useState("");
 
   // Email/password login
   const onSubmit = async (data) => {
-    setFirebaseError("");
+
     const { email, password } = data;
     const result = await loginWithEmail(email, password);
     if (result.error) {
-      toaster(result.error.message || "Login failed");
-      setFirebaseError(result.error.message || "Login failed");
-    } else {
-      toaster("Login successful!");
+      const res = result.error.code;
+      console.log(res);
+      if (res === "auth/user-not-found") {
+        toaster("User not found", theme);
+      }else if (
+        res === "auth/wrong-password" ||
+        res === "auth/invalid-email" ||
+        res === "auth/user-disabled" ||
+        res==="auth/invalid-credential"
+      ) {
+        toaster("Invalid Credential", theme);
+      } else if (res === "auth/too-many-requests") {
+        toaster("Too many requests, please try again later", theme);
+      } else {
+        toaster(result.error.message || "Login failed", theme);
+      }
+       } else {
+      // toaster("Login successful!");
+      redirect("/");
       // handle success (e.g., redirect or show message)
     }
   };
 
   // Google login
   const handleGoogleLogin = async () => {
-    setFirebaseError("");
+    
     const result = await signInWithGoogle();
     if (result.error) {
-      toaster(result.error.message || "Google login failed");
-      setFirebaseError(result.error.message || "Google login failed");
-    } else {
-      toaster("Google login successful!");
+      toaster("Something went wrong", theme);
+       } else {
+      // toaster("Google login successful!");
+      redirect("/");
       // handle success (e.g., redirect or show message)
     }
   };
@@ -108,11 +123,7 @@ export function LoginForm({ className, ...props }) {
               </span>
             )}
           </div>
-          {firebaseError && (
-            <div className="text-red-500 text-xs text-center">
-              {firebaseError}
-            </div>
-          )}
+          
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Logging in..." : "Login"}
           </Button>
