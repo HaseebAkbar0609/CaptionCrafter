@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login-form";
-import { SignUpForm } from "@/components/signup-form";
+import { LoginForm } from "@/components/auth/login-form";
+import { SignUpForm } from "@/components/auth/signup-form";
 
 
 
