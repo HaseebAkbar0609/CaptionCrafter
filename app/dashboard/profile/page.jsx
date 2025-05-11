@@ -34,7 +34,7 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] bg-background py-10 px-2">
+    <div className="flex flex-col items-center justify-center min-h-[80vh]  py-10 px-2">
       <Card className={"w-full max-w-md p-6 "}>
         <CardHeader>
           <CardTitle>Profile Details</CardTitle>
