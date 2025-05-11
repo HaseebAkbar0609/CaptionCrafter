@@ -1,12 +1,7 @@
 "use client"
-
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Command,
-  GalleryVerticalEnd,
-  SquareTerminal,
+  SquareTerminal
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
