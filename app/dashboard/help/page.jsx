@@ -138,7 +138,6 @@ function ContactForm() {
                 message: "Invalid email address",
               },
             })}
-            required
           />
           {errors.email && (
             <span className="text-red-500 text-xs">{errors.email.message}</span>
@@ -150,7 +149,7 @@ function ContactForm() {
             id="contact-message"
             className="w-full border rounded p-2 min-h-[96px]"
             {...register("message", { required: "Message is required" })}
-            required
+           
             rows={3}
           />
           {errors.message && (
