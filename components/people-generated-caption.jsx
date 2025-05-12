@@ -37,15 +37,8 @@ export default function PeopleGeneratedCption() {
   React.useEffect(() => {
     getCaptionsFromAPI();
   }, []);
-  const handleCopy = (caption) => {
-    navigator.clipboard.writeText(caption);
-    toaster("Caption copied to clipboard!");
-  };
-
-  const handleSave = (caption) => {
-    // Placeholder: Save logic
-    toaster("Caption saved!");
-  };
+ 
+  
 
   return (
     <>
@@ -59,8 +52,6 @@ export default function PeopleGeneratedCption() {
       ) : (
         <CaptionGrid
           captions={captions}
-          onCopy={handleCopy}
-          onSave={handleSave}
         />
       )}
     </>

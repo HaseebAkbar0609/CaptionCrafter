@@ -1,31 +1,12 @@
 import React, { useState } from "react";
-import { Copy, Save, Pencil } from "lucide-react";
-import EditCaptionDialog from "@/components/edit-caption-dialog";
+import { Copy, Save, Loader } from "lucide-react";
 import { toaster } from "@/utils/toaster";
 import { saveCaption } from "@/utils/save-caption";
 
-export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
-  const [editIdx, setEditIdx] = useState(null);
-  const [editValue, setEditValue] = useState("");
+export default function CaptionGrid({ captions = [] }) {
   const [savingIdx, setSavingIdx] = useState(null);
-
-  const handleEditClick = (idx) => {
-    setEditIdx(idx);
-    setEditValue(captions[idx]?.text || captions[idx]?.caption || "");
-  };
-
-  const handleDialogSave = () => {
-    if (onEdit && editIdx !== null) {
-      onEdit(editIdx, editValue);
-    }
-    setEditIdx(null);
-    setEditValue("");
-  };
-
-  const handleDialogClose = () => {
-    setEditIdx(null);
-    setEditValue("");
-  };
+  const [loadingCopyIdx, setLoadingCopyIdx] = useState(null);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const handleSave = async (text) => {
     const captionObj = captions.find((c) =>
@@ -37,13 +18,20 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
     const idx = captions.indexOf(captionObj);
     setSavingIdx(idx);
     try {
-      const res=await saveCaption(text, platform, tone);
-      toaster(res.response||"Caption saved!");
+      const res = await saveCaption(text, platform, tone);
+      toaster(res.response || "Caption saved!");
     } catch (e) {
       toaster("Failed to save caption");
     } finally {
       setSavingIdx(null);
     }
+  };
+
+  const handleCopy = async (text, idx) => {
+    setLoadingCopyIdx(idx);
+    navigator.clipboard.writeText(text);
+    toaster("Caption copied to clipboard!");
+    setTimeout(() => setLoadingCopyIdx(null), 1000); // brief spinner
   };
 
   return (
@@ -80,23 +68,47 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
               )}
               <div className="flex flex-wrap gap-2 mt-auto">
                 <button
-                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors"
+                  className={`flex items-center gap-1 px-3 py-1 rounded-lg border transition-colors
+                    ${
+                      hoveredIdx === `copy-${idx}` || loadingCopyIdx === idx
+                        ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)]"
+                        : "bg-transparent text-[var(--color-primary)] border-transparent hover:bg-[var(--color-accent)] hover:border-[var(--color-border)]"
+                    }
+                  `}
                   title="Copy"
-                  onClick={() => onCopy(text)}
+                  onClick={() => handleCopy(text, idx)}
                   aria-label="Copy caption"
+                  onMouseEnter={() => setHoveredIdx(`copy-${idx}`)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  disabled={loadingCopyIdx === idx}
                 >
-                  <Copy size={18} />
+                  {loadingCopyIdx === idx ? (
+                    <Loader size={18} className="animate-spin" />
+                  ) : (
+                    <Copy size={18} />
+                  )}
                   <span className="hidden sm:inline">Copy</span>
                 </button>
                 <button
-                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors disabled:opacity-60"
+                  className={`flex items-center gap-1 px-3 py-1 rounded-lg border transition-colors disabled:opacity-60
+                    ${
+                      hoveredIdx === `save-${idx}` || savingIdx === idx
+                        ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)]"
+                        : "bg-transparent text-[var(--color-primary)] border-transparent hover:bg-[var(--color-accent)] hover:border-[var(--color-border)]"
+                    }
+                  `}
                   title="Save"
                   onClick={() => handleSave(text)}
                   aria-label="Save caption"
+                  onMouseEnter={() => setHoveredIdx(`save-${idx}`)}
+                  onMouseLeave={() => setHoveredIdx(null)}
                   disabled={savingIdx === idx}
                 >
                   {savingIdx === idx ? (
-                    <span className="animate-pulse">Saving...</span>
+                    <>
+                      <Loader size={18} className="animate-spin" />
+                      <span className="hidden sm:inline">Save</span>
+                    </>
                   ) : (
                     <>
                       <Save size={18} />
@@ -104,27 +116,11 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
                     </>
                   )}
                 </button>
-                <button
-                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors"
-                  title="Edit"
-                  onClick={() => handleEditClick(idx)}
-                  aria-label="Edit caption"
-                >
-                  <Pencil size={18} />
-                  <span className="hidden sm:inline">Edit</span>
-                </button>
               </div>
             </div>
           );
         })}
       </div>
-      <EditCaptionDialog
-        open={editIdx !== null}
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onSave={handleDialogSave}
-        onCancel={handleDialogClose}
-      />
     </div>
   );
 }
