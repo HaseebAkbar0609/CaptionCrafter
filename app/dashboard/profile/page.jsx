@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import auth from "@/config/firebase";
+import { toaster } from "@/utils/toaster";
 
 export default function AccountPage() {
   const profileForm = useForm({
@@ -24,13 +25,52 @@ export default function AccountPage() {
   const passwordForm = useForm();
 
   const onProfileSubmit = async (data) => {
-    // TODO: Implement profile update logic
-    alert("Profile updated!\n" + JSON.stringify(data, null, 2));
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error("No auth token");
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/api/profile/update-name",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name: data.name, token }),
+        }
+      );
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.response || "Failed to update profile");
+      toaster(result.response || "Profile updated!");
+    } catch (e) {
+      toaster("Error updating profile");
+    }
   };
 
   const onPasswordSubmit = async (data) => {
-    // TODO: Implement password update logic
-    alert("Password updated!\n" + JSON.stringify(data, null, 2));
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error("No auth token");
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/api/profile/update-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ password: data.newPassword, token }),
+        }
+      );
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.response || "Failed to update password");
+      toaster(result.response || "Password updated!");
+      passwordForm.reset(); // Reset password fields after successful update
+    } catch (e) {
+      toaster("Error updating password");
+    }
   };
 
   return (
@@ -90,8 +130,8 @@ export default function AccountPage() {
             </CardFooter>
           </form>
         </CardContent>
-        </Card>
-        <div className="w-[90%] h-px bg-border my-2" />
+      </Card>
+      <div className="w-[90%] h-px bg-border my-2" />
       <Card className={"w-full max-w-md p-6 mt-4"}>
         <CardHeader>
           <CardTitle>Update Password</CardTitle>
