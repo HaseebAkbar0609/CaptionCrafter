@@ -1,82 +1,110 @@
+import PeopleGeneratedCption from "@/components/people-generated-caption";
 import auth from "@/config/firebase";
 import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Sparkles,
+  CalendarDays,
+  BadgeCheck,
+  PlusCircle,
+  ArrowUpRight,
+} from "lucide-react";
 
 export default function Page() {
   // Placeholder stats
   const captionsToday = 3;
   const captionsWeek = 15;
   const remainingCredits = 7;
-  const recentCaptions = [
-    "Sunsets are proof that endings can be beautiful too.",
-    "Chasing dreams, not people.",
-    "Less perfection, more authenticity.",
-    "Stay close to people who feel like sunlight.",
-    "Create your own sunshine.",
-  ];
-  const proTip =
-    "Pro Tip: Use trending hashtags to boost your caption's reach!";
 
   return (
-    <div className="max-w-3xl mx-auto p-6 md:p-10">
-      <h2 className="mb-4 text-3xl font-bold text-[var(--color-primary)] flex items-center gap-2">
-        Hey {auth?.currentUser?.displayName|| auth?.currentUser?.email?.split("@")[0] || "Guest"}{" "}
-        <span role="img" aria-label="wave">
-          👋
-        </span>
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-[var(--color-card)] rounded-xl p-6 shadow border border-[var(--color-border)] flex flex-col items-center">
-          <div className="font-semibold text-[var(--color-muted-foreground)] mb-1">
-            Captions Today
+    <div className="max-w-4xl w-full mx-auto p-6 md:p-10">
+      <Card className="mb-8 p-0 bg-background/80 shadow-none rounded-2xl">
+        <CardHeader className="flex flex-row items-center gap-4 px-6 pt-6 pb-2">
+          <div>
+            <CardTitle className="text-2xl font-bold flex items-center gap-2 text-primary">
+              Hey{" "}
+              {auth?.currentUser?.displayName ||
+                auth?.currentUser?.email?.split("@")[0] ||
+                "Guest"}
+              <Sparkles className="text-accent w-6 h-6 animate-bounce" />
+            </CardTitle>
+            <CardDescription>
+              Welcome back! Ready to craft some captions?
+            </CardDescription>
           </div>
-          <div className="text-3xl font-extrabold text-[var(--color-primary)]">
-            {captionsToday}
-          </div>
-        </div>
-        <div className="bg-[var(--color-card)] rounded-xl p-6 shadow border border-[var(--color-border)] flex flex-col items-center">
-          <div className="font-semibold text-[var(--color-muted-foreground)] mb-1">
-            This Week
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--color-primary)]">
-            {captionsWeek}
-          </div>
-        </div>
-        <div className="bg-[var(--color-card)] rounded-xl p-6 shadow border border-[var(--color-border)] flex flex-col items-center">
-          <div className="font-semibold text-[var(--color-muted-foreground)] mb-1">
-            Credits Left
-          </div>
-          <div className="text-3xl font-extrabold text-[var(--color-accent)]">
-            {remainingCredits}
-          </div>
-        </div>
+        </CardHeader>
+      </Card>
+      <div className="grid cursor-pointer grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
+          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+            <BadgeCheck className="text-primary w-7 h-7 mb-1" />
+            <CardDescription>Captions Today</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <span className="text-3xl font-extrabold text-primary">
+              {captionsToday}
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
+          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+            <BadgeCheck className="text-primary w-7 h-7 mb-1" />
+            <CardDescription>This Week</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <span className="text-3xl font-extrabold text-primary">
+              {captionsWeek}
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
+          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+            <PlusCircle className="text-accent w-7 h-7 mb-1" />
+            <CardDescription>Credits Left</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <span className="text-3xl font-extrabold text-accent">
+              {remainingCredits}
+            </span>
+          </CardContent>
+        </Card>
       </div>
       <div className="flex flex-col md:flex-row gap-4 mb-10">
-        <Link href="/dashboard/generate" legacyBehavior>
-          <a className="flex-1 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-lg p-4 text-center font-semibold hover:bg-[var(--color-accent)] transition-colors shadow-md">
-            Generate Caption
-          </a>
-        </Link>
-        <Link href="/dashboard/pricing" legacyBehavior>
-          <a className="flex-1 bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] rounded-lg p-4 text-center font-semibold hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] transition-colors shadow-md">
-            Upgrade Plan
-          </a>
-        </Link>
+        <Button
+          asChild
+          className="flex-1 text-lg font-semibold py-6"
+          variant="default"
+        >
+          <Link
+            href="/dashboard/generate"
+            className="flex items-center justify-center gap-2"
+          >
+            <Sparkles className="w-5 h-5" /> Generate Caption{" "}
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </Button>
+        <Button
+          asChild
+          className="flex-1 text-lg font-semibold py-6"
+          variant="secondary"
+        >
+          <Link
+            href="/dashboard/pricing"
+            className="flex items-center justify-center gap-2"
+          >
+            <BadgeCheck className="w-5 h-5" /> Upgrade Plan{" "}
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </Button>
       </div>
-      <div className="mb-10 bg-[var(--color-card)] rounded-xl p-6 border border-[var(--color-border)] shadow-sm">
-        <h3 className="mb-3 text-lg font-semibold text-[var(--color-foreground)]">
-          Recent Captions
-        </h3>
-        <ul className="pl-5 list-disc text-[var(--color-muted-foreground)] space-y-1">
-          {recentCaptions.map((caption, idx) => (
-            <li key={idx} className="mb-1 text-base">
-              {caption}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="bg-[var(--color-popover)] border border-[var(--color-border)] rounded-xl p-5 italic text-[var(--color-accent)] text-center shadow-sm">
-        {proTip}
-      </div>
+      <PeopleGeneratedCption />
     </div>
   );
 }
