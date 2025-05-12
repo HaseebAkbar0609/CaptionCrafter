@@ -39,13 +39,16 @@ export default function RecentGeneratedCption({limit=10}) {
 
   return (
     <>
-    
       {loading ? (
-        <div className="flex justify-center items-center py-8">
-          <Loader className="animate-spin w-8 h-8 text-[var(--color-primary)]" />
+        <div className="flex justify-center items-center py-8 text-[var(--color-primary)]">
+          <Loader className="animate-spin w-8 h-8 " />
+          <span className="ml-2">Loading Recent Captions...</span>
         </div>
       ) : (
-        <CaptionGrid heading={"Recent Generated Captions"} captions={captions} />
+        <CaptionGrid
+          heading={"Recent Generated Captions"}
+          captions={captions}
+        />
       )}
     </>
   );

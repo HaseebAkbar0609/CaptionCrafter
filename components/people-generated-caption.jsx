@@ -45,9 +45,10 @@ export default function PeopleGeneratedCption() {
         People Generated Captions
       </h3>
       {loading ? (
-        <div className="flex justify-center items-center py-8">
-          <Loader className="animate-spin w-8 h-8 text-[var(--color-primary)]" />
-        </div>
+        <div className="flex justify-center items-center py-8 text-[var(--color-primary)]">
+                 <Loader className="animate-spin w-8 h-8 " />
+                 <span className="ml-2">Loading People Generated Captions...</span>
+               </div>
       ) : (
         <CaptionGrid
           captions={captions}
