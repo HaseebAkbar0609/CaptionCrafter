@@ -1,3 +1,4 @@
+"use client";
 import PeopleGeneratedCption from "@/components/people-generated-caption";
 import auth from "@/config/firebase";
 import Link from "next/link";
@@ -11,13 +12,23 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Sparkles,
-  CalendarDays,
   BadgeCheck,
   PlusCircle,
   ArrowUpRight,
 } from "lucide-react";
+// import { useEffect } from "react";
 
 export default function Page() {
+  // useEffect(() => {
+  //   fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/test").then((res) => {
+  //     if (res.status === 200) {
+  //       console.log("Backend is up and running");
+  //     } else {
+  //       console.error("Backend is down");
+  //     }
+  //   });
+    
+  // },[])
   // Placeholder stats
   const captionsToday = 3;
   const captionsWeek = 15;
