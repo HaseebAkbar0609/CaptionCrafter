@@ -188,7 +188,7 @@ export default function GeneratePage() {
                   minLength: { value: 3, message: "At least 3 characters" },
                 })}
                 placeholder="E.g. Launching a new eco-friendly product"
-                className={"py-2 pr-4 min-h-[90px] resize-none"}
+                className={"py-2 pr-4 min-h-[130px] resize-none"}
                 rows={4}
               />
               <div className="absolute left-0 right-0 flex justify-end bottom-2 px-2 pointer-events-none">
@@ -299,7 +299,7 @@ export default function GeneratePage() {
               className="mr-2 accent-primary"
               {...register("useHashtags")}
             />
-            <Label htmlFor="hashtags" className="text-sm">
+            <Label htmlFor="hashtags" className="cursor-pointer text-sm">
               Include trending hashtags
             </Label>
           </div>
