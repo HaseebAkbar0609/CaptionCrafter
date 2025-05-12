@@ -98,14 +98,16 @@ export function NavUser({
                   Account
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <BarChart2 />
                 Analytics
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <HelpCircle />
-                Help & Support
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
+              <Link href={"/dashboard/help"}>
+                <DropdownMenuItem>
+                  <HelpCircle />
+                  Help & Support
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <Link href={"/dashboard/logout"}>

@@ -39,21 +39,21 @@ const data = {
       url: "/dashboard/saved",
       icon: Bookmark,
     },
-    {
-      title: "Tone & Platform",
-      url: "/dashboard/tone",
-      icon: Sliders,
-    },
+    // {
+    //   title: "Tone & Platform",
+    //   url: "/dashboard/tone",
+    //   icon: Sliders,
+    // },
     {
       title: "Upgrade to Pro",
       url: "/dashboard/pricing",
       icon: Gem,
     },
-    {
-      title: "Analytics",
-      url: "/dashboard/analytics",
-      icon: BarChart2,
-    },
+    // {
+    //   title: "Analytics",
+    //   url: "/dashboard/analytics",
+    //   icon: BarChart2,
+    // },
     {
       title: "Help & Support",
       url: "/dashboard/help",
