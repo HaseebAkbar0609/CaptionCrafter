@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toaster } from "@/utils/toaster";
-import { useTheme } from "next-themes";
 import { Lock, Unlock, Sparkles } from "lucide-react";
 import CaptionGrid from "@/components/caption-grid";
 import PremiumCaption from "@/components/premium-caption";
 import PeopleGeneratedCption from "@/components/people-generated-caption";
 import auth from "@/config/firebase";
+import RecentGeneratedCption from "@/components/recent-generated-captions";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
 const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
@@ -50,7 +50,6 @@ const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
 // ];
 
 export default function GeneratePage() {
-  const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [captions, setCaptions] = useState([]);
   // const [visibility, setVisibility] = useState("public");
@@ -84,6 +83,7 @@ export default function GeneratePage() {
       tone: data.tone,
       ishashtags: data.useHashtags,
       visibility: data.visibility,
+      uid: auth.currentUser?.uid,
     };
     // console.log("Payload:", payload);
     // return
@@ -328,9 +328,12 @@ export default function GeneratePage() {
         {/* Show Top Captions before generation */}
         {!hasGenerated && !loading && (
           <>
-            <PeopleGeneratedCption />
+            <RecentGeneratedCption/>
             <div className="w-[100%] h-px bg-border my-6" />
-            <PremiumCaption />
+
+            {/* <PeopleGeneratedCption />
+            <div className="w-[100%] h-px bg-border my-6" />
+            <PremiumCaption /> */}
           </>
         )}
         {/* Show loading state */}
@@ -346,7 +349,7 @@ export default function GeneratePage() {
               </span>
             </div>
             <div className="w-[100%] h-px bg-border my-6" />
-            <PeopleGeneratedCption />
+            {/* <PeopleGeneratedCption /> */}
           </>
         )}
         {/* After generation: show 3 generated captions, then Top Captions below */}
@@ -358,12 +361,12 @@ export default function GeneratePage() {
             />
 
             <div className="w-[100%] h-px bg-border my-6" />
-            <PeopleGeneratedCption />
-            <div className="w-[100%] h-px bg-border my-6" />
-            {/* Premium Captions Section */}
-            <PremiumCaption />
           </>
         )}
+        <PeopleGeneratedCption />
+        <div className="w-[100%] h-px bg-border my-6" />
+        {/* Premium Captions Section */}
+        <PremiumCaption />
       </div>
       {/* Removed Edit Popup Modal, now handled in CaptionGrid */}
     </div>

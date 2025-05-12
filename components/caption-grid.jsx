@@ -3,7 +3,7 @@ import { Copy, Save, Loader } from "lucide-react";
 import { toaster } from "@/utils/toaster";
 import { saveCaption } from "@/utils/save-caption";
 
-export default function CaptionGrid({ captions = [] }) {
+export default function CaptionGrid({heading, captions = [] }) {
   const [savingIdx, setSavingIdx] = useState(null);
   const [loadingCopyIdx, setLoadingCopyIdx] = useState(null);
   const [hoveredIdx, setHoveredIdx] = useState(null);
@@ -37,9 +37,10 @@ export default function CaptionGrid({ captions = [] }) {
   return (
     <div className="w-full ">
       <h3 className="mb-3 text-2xl font-bold text-[var(--color-primary)]">
-        Top Generated Captions
+        {heading || "Top Generated Captions"}
       </h3>
-      <div className="grid grid-cols-1 gap-6 auto-rows-min w-full">
+      {captions.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 auto-rows-min w-full">
         {captions.map((captionObj, idx) => {
           // Support both string and object for backward compatibility
           const text =
@@ -120,7 +121,12 @@ export default function CaptionGrid({ captions = [] }) {
             </div>
           );
         })}
-      </div>
+      </div>)
+      : (
+        <div className="flex justify-center items-center py-8">
+          <span className="text-muted-foreground">No captions available</span>
+        </div>
+      )}
     </div>
   );
 }
