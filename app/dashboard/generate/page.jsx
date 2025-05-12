@@ -354,10 +354,7 @@ export default function GeneratePage() {
           <>
             <CaptionGrid
               captions={captions}
-              onCopy={handleCopy}
-              onSave={handleSave}
-              onRegenerate={handleRegenerate}
-              onEdit={handleEdit}
+ 
             />
 
             <div className="w-[100%] h-px bg-border my-6" />
