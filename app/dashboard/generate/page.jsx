@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,18 +10,48 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toaster } from "@/utils/toaster";
 import { useTheme } from "next-themes";
+import { Eye, EyeOff, Lock, Unlock, Sparkles } from "lucide-react";
+import CaptionGrid from "@/components/caption-grid";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
 const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
+const TOP_CAPTIONS = [
+  {
+    text: "Unleash your creativity with every post!",
+    platform: PLATFORMS[0],
+    tone: TONES[0],
+  },
+  {
+    text: "Making memories, one caption at a time.",
+    platform: PLATFORMS[0],
+    tone: TONES[1],
+  },
+  {
+    text: "Your story, your style, your caption.",
+    platform: PLATFORMS[1],
+    tone: TONES[2],
+  },
+  {
+    text: "Share the vibe, inspire the tribe.",
+    platform: PLATFORMS[2],
+    tone: TONES[3],
+  },
+  {
+    text: "Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.",
+    platform: PLATFORMS[0],
+    tone: TONES[4],
+  },
+];
 
 export default function GeneratePage() {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [captions, setCaptions] = useState([]);
-  const [editIdx, setEditIdx] = useState(null);
-  const [editValue, setEditValue] = useState("");
+  const [visibility, setVisibility] = useState("public");
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   const {
     register,
@@ -42,14 +71,36 @@ export default function GeneratePage() {
   // Mock AI generation
   const onSubmit = (data) => {
     setLoading(true);
+    setHasGenerated(true);
     setTimeout(() => {
       setCaptions([
-        `🌟 ${data.input} - ${data.platform} (${data.tone}) #inspired`,
-        `"${data.input}" | Perfect for ${data.platform}!`,
-        `${data.input} — ${data.tone} vibes only!`,
-        `Level up your ${data.platform} with: ${data.input}` +
-          (data.useHashtags ? " #trending" : ""),
-        `Why not: ${data.input}? (${data.tone})`,
+        {
+          text: `🌟 ${data.input} - ${data.platform} (${data.tone}) #inspired`,
+          platform: data.platform,
+          tone: data.tone,
+        },
+        {
+          text: `"${data.input}" | Perfect for ${data.platform}!`,
+          platform: data.platform,
+          tone: data.tone,
+        },
+        {
+          text: `${data.input} — ${data.tone} vibes only!`,
+          platform: data.platform,
+          tone: data.tone,
+        },
+        {
+          text:
+            `Level up your ${data.platform} with: ${data.input}` +
+            (data.useHashtags ? " #trending" : ""),
+          platform: data.platform,
+          tone: data.tone,
+        },
+        {
+          text: `Why not: ${data.input}? (${data.tone})`,
+          platform: data.platform,
+          tone: data.tone,
+        },
       ]);
       setLoading(false);
     }, 1200);
@@ -76,22 +127,10 @@ export default function GeneratePage() {
     setEditValue(captions[idx]);
   };
 
-  const handleEditSave = () => {
-    setCaptions((prev) => prev.map((c, i) => (i === editIdx ? editValue : c)));
-    setEditIdx(null);
-    setEditValue("");
-    toaster("Caption updated!", theme);
-  };
-
-  const handleEditCancel = () => {
-    setEditIdx(null);
-    setEditValue("");
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] py-10 px-2">
-      <div className="w-full max-w-2xl p-6  ">
-        <div className="flex flex-col items-center gap-2 text-center mb-6">
+    <div className="w-max-full w-full flex flex-col items-center justify-center min-h-[80vh] py-10 px-2">
+      <div className="w-full p-6 max-w-4xl  flex flex-col ">
+        <div className="flex flex-col gap-2  mb-6">
           <h2 className="text-2xl font-bold text-[var(--color-primary)]">
             Generate AI Caption
           </h2>
@@ -100,7 +139,10 @@ export default function GeneratePage() {
             Craft the perfect caption for your social post in seconds.
           </p>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex  flex-col items gap-6"
+        >
           <div className="grid gap-2">
             <Label
               htmlFor="caption-input"
@@ -108,16 +150,52 @@ export default function GeneratePage() {
             >
               Describe your post or idea
             </Label>
-            <Input
-              id="caption-input"
-              type="text"
-              {...register("input", {
-                required: "Description is required",
-                minLength: { value: 3, message: "At least 3 characters" },
-              })}
-              placeholder="E.g. Launching a new eco-friendly product"
-              className={"py-2"}
-            />
+            <div className="relative">
+              <Textarea
+                id="caption-input"
+                {...register("input", {
+                  required: "Description is required",
+                  minLength: { value: 3, message: "At least 3 characters" },
+                })}
+                placeholder="E.g. Launching a new eco-friendly product"
+                className={"py-2 pr-4 min-h-[90px] resize-none"}
+                rows={4}
+              />
+              <div className="absolute left-0 right-0 flex justify-end bottom-2 px-2 pointer-events-none">
+                <button
+                  type="button"
+                  className={`pointer-events-auto flex items-center gap-1 rounded-full px-3 py-1 transition-colors shadow font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600`}
+                  title={visibility === "public" ? "Public" : "Private"}
+                  onClick={() => {
+                    setVisibility((v) =>
+                      v === "public" ? "private" : "public"
+                    );
+                    setValue(
+                      "visibility",
+                      visibility === "public" ? "private" : "public"
+                    );
+                  }}
+                  style={{ minWidth: 70, justifyContent: "center" }}
+                >
+                  {visibility === "public" ? (
+                    <>
+                      <Unlock size={16} className="mr-1" />
+                      Public
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={16} className="mr-1" />
+                      Private
+                    </>
+                  )}
+                </button>
+              </div>
+              <input
+                type="hidden"
+                {...register("visibility")}
+                value={visibility}
+              />
+            </div>
             {errors.input && (
               <span className="text-red-500 text-xs">
                 {errors.input.message}
@@ -191,97 +269,53 @@ export default function GeneratePage() {
           </div>
           <Button
             type="submit"
-            className="w-full"
+            className="w-full flex items-center justify-center gap-2"
             disabled={loading || isSubmitting}
           >
-            {loading || isSubmitting ? "Generating..." : "Generate Caption"}
+            {loading || isSubmitting ? (
+              <>
+                <span className="animate-pulse flex items-center gap-2">
+                  <Sparkles className="animate-spin-slow" />
+                  Generating...
+                </span>
+              </>
+            ) : (
+              <>
+                <Sparkles /> Generate Caption
+              </>
+            )}
           </Button>
         </form>
-        {captions.length > 0 && (
-          <div className="bg-[var(--color-popover)] border border-[var(--color-border)] rounded-lg p-6 mt-8">
-            <h3 className="mb-3 text-lg font-semibold text-[var(--color-foreground)]">
-              AI-Generated Captions
-            </h3>
-            <ul className="space-y-4">
-              {captions.map((caption, idx) => (
-                <li
-                  key={idx}
-                  className="flex flex-col sm:flex-row items-stretch sm:items-start gap-2 sm:gap-3 w-full"
-                >
-                  <span className="flex-1 text-[var(--color-muted-foreground)] break-words text-sm sm:text-base">
-                    {caption}
-                  </span>
-                  <div className="flex gap-2 sm:flex-col">
-                    <button
-                      className="px-2 py-1 rounded bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-xs font-medium"
-                      title="Copy"
-                      onClick={() => handleCopy(caption)}
-                    >
-                      Copy ✨
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-xs font-medium"
-                      title="Save"
-                      onClick={() => handleSave(caption)}
-                    >
-                      Save 💾
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-xs font-medium"
-                      title="Regenerate"
-                      onClick={() => handleRegenerate(idx)}
-                    >
-                      Regenerate 🔄
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded bg-[var(--color-secondary)] hover:bg-[var(--color-accent)] text-xs font-medium"
-                      title="Edit"
-                      onClick={() => handleEdit(idx)}
-                    >
-                      Edit ✏️
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+        {/* Display Top Captions before generation, loading state during, and generated captions after */}
+
+        <div className="w-[90%] h-px bg-border my-10" />
+        {!hasGenerated && !loading && (
+          <CaptionGrid
+            captions={TOP_CAPTIONS}
+            onCopy={handleCopy}
+            onSave={handleSave}
+            onEdit={() => {}}
+          />
+        )}
+        {loading && (
+          <div className="flex justify-center items-center min-h-[120px] w-full text-lg font-medium text-[var(--color-primary)] py-8">
+            <span className="animate-pulse flex items-center gap-2">
+              <Sparkles className="animate-spin-slow" />
+              Generating...
+            </span>
           </div>
         )}
+        {hasGenerated && !loading && captions.length > 0 && (
+          <CaptionGrid
+            captions={captions}
+            onCopy={handleCopy}
+            onSave={handleSave}
+            onRegenerate={handleRegenerate}
+            onEdit={handleEdit}
+          />
+        )}
       </div>
-      {/* Edit Popup Modal */}
-      {editIdx !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200"
-            onClick={handleEditCancel}
-          ></div>
-          <div className="relative w-[90vw] max-w-md bg-white dark:bg-zinc-900 rounded-xl shadow-2xl p-6 animate-fade-in flex flex-col">
-            <h4 className="mb-2 font-semibold text-lg text-center">
-              Edit Caption
-            </h4>
-            <textarea
-              className="w-full border rounded p-2 mb-4 text-black dark:text-white bg-white dark:bg-zinc-800 resize-none focus:ring-2 focus:ring-[var(--color-primary)]"
-              rows={4}
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              autoFocus
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                className="px-4 py-1 rounded bg-[var(--color-primary)] text-white font-medium hover:opacity-90"
-                onClick={handleEditSave}
-              >
-                Save
-              </button>
-              <button
-                className="px-4 py-1 rounded bg-[var(--color-secondary)] text-[var(--color-foreground)] font-medium hover:bg-[var(--color-accent)]"
-                onClick={handleEditCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Removed Edit Popup Modal, now handled in CaptionGrid */}
     </div>
   );
 }
