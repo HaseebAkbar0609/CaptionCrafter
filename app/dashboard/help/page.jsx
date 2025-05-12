@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { toaster } from "@/utils/toaster";
-import { useTheme } from "next-themes";
 
 const FAQS = [
   {
@@ -89,18 +88,35 @@ function Accordion({ faqs }) {
 }
 
 function ContactForm() {
-  const { theme } = useTheme();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (data) => {
-    // Optionally integrate with email service here
-    toaster("Thank you! We received your message.", theme);
-    reset();
+    // console.log("Form data:", data);
+    // return
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/help", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        toaster("Thank you! We received your message.");
+        reset();
+      } else {
+        toaster("Failed to send message. Please try again.");
+      }
+    } catch (e) {
+      toaster("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -149,7 +165,6 @@ function ContactForm() {
             id="contact-message"
             className="w-full border rounded p-2 min-h-[96px]"
             {...register("message", { required: "Message is required" })}
-           
             rows={3}
           />
           {errors.message && (
@@ -205,7 +220,6 @@ export default function HelpPage() {
 
       <div className="w-[100%] h-px bg-border my-10" />
       <section>
-        
         <ContactForm />
       </section>
     </div>
