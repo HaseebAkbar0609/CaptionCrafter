@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import CaptionGrid from "./caption-grid";
-import { toaster } from "@/utils/toaster";
 import auth from "@/config/firebase";
 import { Loader } from "lucide-react";
 

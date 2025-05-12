@@ -15,8 +15,10 @@ import {
   BadgeCheck,
   PlusCircle,
   ArrowUpRight,
+  Info,
 } from "lucide-react";
 import { useEffect } from "react";
+import RecentGeneratedCption from "@/components/recent-generated-captions";
 
 export default function Page() {
   useEffect(() => {
@@ -27,8 +29,7 @@ export default function Page() {
         console.error("Backend is down");
       }
     });
-    
-  },[])
+  }, []);
   // Placeholder stats
   const captionsToday = 3;
   const captionsWeek = 15;
@@ -36,6 +37,11 @@ export default function Page() {
 
   return (
     <div className="max-w-4xl w-full mx-auto p-6 md:p-10">
+      <div className="flex items-center gap-2 mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-100">
+        <Info className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+        <span className="font-medium">Pro Tip:</span>
+        <span>Save Caption to edit and further change, it's recommended.</span>
+      </div>
       <Card className="mb-8 p-0 bg-background/80 shadow-none rounded-2xl">
         <CardHeader className="flex flex-row items-center gap-4 px-6 pt-6 pb-2">
           <div>
@@ -115,7 +121,8 @@ export default function Page() {
           </Link>
         </Button>
       </div>
-      <PeopleGeneratedCption />
+
+      <RecentGeneratedCption limit={35} />
     </div>
   );
 }
