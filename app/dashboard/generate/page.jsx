@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toaster } from "@/utils/toaster";
 import { useTheme } from "next-themes";
-import { Eye, EyeOff, Lock, Unlock, Sparkles } from "lucide-react";
+import {  Lock, Unlock, Sparkles, UnlockIcon } from "lucide-react";
 import CaptionGrid from "@/components/caption-grid";
+import Link from "next/link";
+import PremiumCaption from "@/components/premium-caption";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
 const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
@@ -46,18 +48,21 @@ const TOP_CAPTIONS = [
   },
 ];
 
+
 export default function GeneratePage() {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [captions, setCaptions] = useState([]);
   const [visibility, setVisibility] = useState("public");
   const [hasGenerated, setHasGenerated] = useState(false);
+  const loadingRef = useRef(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
+    reset,
     setValue,
   } = useForm({
     defaultValues: {
@@ -72,6 +77,7 @@ export default function GeneratePage() {
   const onSubmit = (data) => {
     setLoading(true);
     setHasGenerated(true);
+    reset();
     setTimeout(() => {
       setCaptions([
         {
@@ -104,6 +110,15 @@ export default function GeneratePage() {
       ]);
       setLoading(false);
     }, 1200);
+    // Scroll to loading animation
+    setTimeout(() => {
+      if (loadingRef.current) {
+        loadingRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, 50);
   };
 
   const handleCopy = (caption) => {
@@ -124,7 +139,6 @@ export default function GeneratePage() {
 
   const handleEdit = (idx) => {
     setEditIdx(idx);
-    setEditValue(captions[idx]);
   };
 
   return (
@@ -288,31 +302,60 @@ export default function GeneratePage() {
         </form>
         {/* Display Top Captions before generation, loading state during, and generated captions after */}
 
-        <div className="w-[90%] h-px bg-border my-10" />
+        <div className="w-[100%] h-px bg-border my-10" />
+        {/* Show Top Captions before generation */}
         {!hasGenerated && !loading && (
-          <CaptionGrid
-            captions={TOP_CAPTIONS}
-            onCopy={handleCopy}
-            onSave={handleSave}
-            onEdit={() => {}}
-          />
+          <>
+            <h3 className="text-lg font-semibold mb-2 text-[var(--color-primary)]">
+              People Generated Captions
+            </h3>
+            <CaptionGrid
+              captions={TOP_CAPTIONS}
+              onCopy={handleCopy}
+              onSave={handleSave}
+              onEdit={() => {}}
+            />
+            <div className="w-[100%] h-px bg-border my-6" />
+          <PremiumCaption/>
+          </>
         )}
+        {/* Show loading state */}
         {loading && (
-          <div className="flex justify-center items-center min-h-[120px] w-full text-lg font-medium text-[var(--color-primary)] py-8">
+          <div
+            ref={loadingRef}
+            className="flex justify-center items-center min-h-[120px] w-full text-lg font-medium text-[var(--color-primary)] py-8"
+          >
             <span className="animate-pulse flex items-center gap-2">
               <Sparkles className="animate-spin-slow" />
               Generating...
             </span>
           </div>
         )}
+        {/* After generation: show 3 generated captions, then Top Captions below */}
         {hasGenerated && !loading && captions.length > 0 && (
-          <CaptionGrid
-            captions={captions}
-            onCopy={handleCopy}
-            onSave={handleSave}
-            onRegenerate={handleRegenerate}
-            onEdit={handleEdit}
-          />
+          <>
+            <CaptionGrid
+              captions={captions.slice(0, 3)}
+              onCopy={handleCopy}
+              onSave={handleSave}
+              onRegenerate={handleRegenerate}
+              onEdit={handleEdit}
+            />
+            <div className="w-[100%] h-px bg-border my-6" />
+
+            <div className="w-[100%] h-px bg-border my-6" />
+            <h3 className="text-lg font-semibold mb-2 text-[var(--color-primary)]">
+              People Generated Captions
+            </h3>
+            <CaptionGrid
+              captions={TOP_CAPTIONS}
+              onCopy={handleCopy}
+              onSave={handleSave}
+              onEdit={() => {}}
+            />
+            {/* Premium Captions Section */}
+           <PremiumCaption/>
+          </>
         )}
       </div>
       {/* Removed Edit Popup Modal, now handled in CaptionGrid */}

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Save, Pencil } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Copy, Save, Pencil, ThumbsUp } from "lucide-react";
+
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
   const [editIdx, setEditIdx] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [likes, setLikes] = useState(Array(captions.length).fill(0));
 
   const handleEditClick = (idx) => {
     setEditIdx(idx);
-    setEditValue(captions[idx]?.text||"");
+    setEditValue(captions[idx]?.text || "");
   };
 
   const handleDialogSave = () => {
@@ -24,6 +25,14 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
   const handleDialogClose = () => {
     setEditIdx(null);
     setEditValue("");
+  };
+
+  const handleLike = (idx) => {
+    setLikes((prev) => {
+      const updated = [...prev];
+      updated[idx] = (updated[idx] || 0) + 1;
+      return updated;
+    });
   };
 
   return (
@@ -83,6 +92,17 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
                 >
                   <Pencil size={18} />
                   <span className="hidden sm:inline">Edit</span>
+                </button>
+                <button
+                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors"
+                  title="Like"
+                  onClick={() => handleLike(idx)}
+                  aria-label="Like caption"
+                  type="button"
+                >
+                  <ThumbsUp size={18} />
+                  <span className="hidden sm:inline">Like</span>
+                  <span className="ml-1">{likes[idx] || 0}</span>
                 </button>
               </div>
             </div>
