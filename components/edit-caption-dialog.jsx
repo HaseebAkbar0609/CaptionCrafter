@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
 
 export default function EditCaptionDialog({
   open,
@@ -9,6 +10,13 @@ export default function EditCaptionDialog({
   onSave,
   onCancel,
 }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = () => {
+    setLoading(true);
+    Promise.resolve(onSave()).finally(() => setLoading(false));
+  };
+
   return (
     <Dialog open={open} onOpenChange={onCancel}>
       <DialogContent>
@@ -22,12 +30,21 @@ export default function EditCaptionDialog({
           onChange={onChange}
           rows={5}
           style={{ minHeight: 100 }}
+          disabled={loading}
         />
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel}>
+          <Button variant="outline" onClick={onCancel} disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={onSave}>Save</Button>
+          <Button onClick={handleSave} disabled={loading}>
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <Loader className="animate-spin w-4 h-4" /> Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

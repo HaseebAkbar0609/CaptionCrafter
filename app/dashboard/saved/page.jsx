@@ -13,6 +13,7 @@ import EditCaptionDialog from "@/components/edit-caption-dialog";
 import { toaster } from "@/utils/toaster";
 import { getCaption } from "@/utils/get-caption";
 import { Loader } from "lucide-react";
+import auth from "@/config/firebase";
 
 const PLATFORMS = ["All", "Instagram", "LinkedIn", "Twitter"];
 const TONES = [
@@ -32,6 +33,8 @@ export default function SavedCaptionsPage() {
   const [platformFilter, setPlatformFilter] = useState("All");
   const [toneFilter, setToneFilter] = useState("All");
   const [page, setPage] = useState(1);
+  const [deleteLoadingId, setDeleteLoadingId] = useState(null);
+  const [copyLoadingId, setCopyLoadingId] = useState(null);
   const PAGE_SIZE = 5;
 
   React.useEffect(() => {
@@ -50,27 +53,86 @@ export default function SavedCaptionsPage() {
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
 
-  const handleCopy = (caption) => {
-    navigator.clipboard.writeText(caption);
-    toaster("Caption copied to clipboard!");
+  const handleCopy = async (id, caption) => {
+    setCopyLoadingId(id);
+    try {
+      await navigator.clipboard.writeText(caption);
+      toaster("Caption copied to clipboard!");
+    } finally {
+      setTimeout(() => setCopyLoadingId(null), 800); // brief spinner
+    }
   };
   const handleEdit = (id, caption) => {
-    console.log("Editing caption:", id, caption);
     setEditId(id);
     setEditText(caption);
   };
-  const handleEditSave = (id) => {
-    setCaptions(
-      captions.map((c) => (c.id === id ? { ...c, caption: editText } : c))
-    );
-    setEditId(null);
-    setEditText("");
-    toaster("Caption updated successfully!");
+  const handleEditSave = async (id) => {
+    try {
+      const payload = {
+        uuid: id,
+        caption: editText,
+        userId: auth.currentUser?.uid,
+      };
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error("No auth token");
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/api/update-caption",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to update caption");
+      const updatedCaption = await response.json();
+      setCaptions((prev) =>
+        prev.map((c) => (c.id === id ? { ...c, caption: editText } : c))
+      );
+      toaster(updatedCaption.response);
+      // toaster("Caption updated successfully!");
+    } catch (error) {
+      console.error("Error updating caption:", error);
+      toaster("Failed to update caption.");
+    } finally {
+      setEditId(null);
+      setEditText("");
+    }
+    // toaster("Caption updated successfully!");
   };
-  const handleDelete = (id) => {
-    console.log("Deleting caption:", id);
-    setCaptions(captions.filter((c) => c.id !== id));
-    toaster("Caption deleted.");
+  const handleDelete = async (id) => {
+    setDeleteLoadingId(id);
+    try {
+      const payload = {
+        uuid: id,
+        userId: auth.currentUser?.uid,
+      };
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error("No auth token");
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/api/delete-caption",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to Delete caption");
+      const updatedCaption = await response.json();
+      setCaptions(captions.filter((c) => c.id !== id));
+      toaster(updatedCaption.response);
+      // toaster("Caption updated successfully!");
+    } catch (error) {
+      console.error("Error Deleting caption:", error);
+      toaster("Failed to Delete caption.");
+    } finally {
+      setDeleteLoadingId(null);
+    }
   };
 
   // Reset pagination if filters change
@@ -152,16 +214,22 @@ export default function SavedCaptionsPage() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleCopy(c.caption)}
+                  onClick={() => handleCopy(c.id, c.caption)}
                   title="Copy"
+                  disabled={!!copyLoadingId}
                 >
-                  Copy
+                  {copyLoadingId === c.id ? (
+                    <Loader className="animate-spin w-4 h-4" />
+                  ) : (
+                    "Copy"
+                  )}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleEdit(c.id, c.caption)}
                   title="Edit"
+                  disabled={!!deleteLoadingId}
                 >
                   Edit
                 </Button>
@@ -169,8 +237,13 @@ export default function SavedCaptionsPage() {
                   size="sm"
                   onClick={() => handleDelete(c.id)}
                   title="Delete"
+                  disabled={deleteLoadingId === c.id}
                 >
-                  Delete
+                  {deleteLoadingId === c.id ? (
+                    <Loader className="animate-spin w-4 h-4" />
+                  ) : (
+                    "Delete"
+                  )}
                 </Button>
               </li>
             ))}
