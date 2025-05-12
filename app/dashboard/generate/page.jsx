@@ -16,36 +16,37 @@ import { useTheme } from "next-themes";
 import { Lock, Unlock, Sparkles } from "lucide-react";
 import CaptionGrid from "@/components/caption-grid";
 import PremiumCaption from "@/components/premium-caption";
+import PeopleGeneratedCption from "@/components/people-generated-caption";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
 const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
-const TOP_CAPTIONS = [
-  {
-    text: "Unleash your creativity with every post!",
-    platform: PLATFORMS[0],
-    tone: TONES[0],
-  },
-  {
-    text: "Making memories, one caption at a time.",
-    platform: PLATFORMS[0],
-    tone: TONES[1],
-  },
-  {
-    text: "Your story, your style, your caption.",
-    platform: PLATFORMS[1],
-    tone: TONES[2],
-  },
-  {
-    text: "Share the vibe, inspire the tribe.",
-    platform: PLATFORMS[2],
-    tone: TONES[3],
-  },
-  {
-    text: "Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.",
-    platform: PLATFORMS[0],
-    tone: TONES[4],
-  },
-];
+// const TOP_CAPTIONS = [
+//   {
+//     text: "Unleash your creativity with every post!",
+//     platform: PLATFORMS[0],
+//     tone: TONES[0],
+//   },
+//   {
+//     text: "Making memories, one caption at a time.",
+//     platform: PLATFORMS[0],
+//     tone: TONES[1],
+//   },
+//   {
+//     text: "Your story, your style, your caption.",
+//     platform: PLATFORMS[1],
+//     tone: TONES[2],
+//   },
+//   {
+//     text: "Share the vibe, inspire the tribe.",
+//     platform: PLATFORMS[2],
+//     tone: TONES[3],
+//   },
+//   {
+//     text: "Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.Turn moments into memories with the perfect caption.",
+//     platform: PLATFORMS[0],
+//     tone: TONES[4],
+//   },
+// ];
 
 export default function GeneratePage() {
   const { theme } = useTheme();
@@ -107,7 +108,7 @@ export default function GeneratePage() {
         },
       ]);
       setLoading(false);
-    }, 1200);
+    }, 5000);
     // Scroll to loading animation
     setTimeout(() => {
       if (loadingRef.current) {
@@ -306,30 +307,26 @@ export default function GeneratePage() {
         {/* Show Top Captions before generation */}
         {!hasGenerated && !loading && (
           <>
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-primary)]">
-              People Generated Captions
-            </h3>
-            <CaptionGrid
-              captions={TOP_CAPTIONS}
-              onCopy={handleCopy}
-              onSave={handleSave}
-              onEdit={() => {}}
-            />
+            <PeopleGeneratedCption />
             <div className="w-[100%] h-px bg-border my-6" />
             <PremiumCaption />
           </>
         )}
         {/* Show loading state */}
         {loading && (
-          <div
-            ref={loadingRef}
-            className="flex justify-center items-center min-h-[120px] w-full text-lg font-medium text-[var(--color-primary)] py-8"
-          >
-            <span className="animate-pulse flex items-center gap-2">
-              <Sparkles className="animate-spin-slow" />
-              Generating...
-            </span>
-          </div>
+          <>
+            <div
+              ref={loadingRef}
+              className="flex justify-center items-center min-h-[120px] w-full text-lg font-medium text-[var(--color-primary)] py-8"
+            >
+              <span className="animate-pulse flex items-center gap-2">
+                <Sparkles className="animate-spin-slow" />
+                Generating...
+              </span>
+            </div>
+            <div className="w-[100%] h-px bg-border my-6" />
+            <PeopleGeneratedCption />
+          </>
         )}
         {/* After generation: show 3 generated captions, then Top Captions below */}
         {hasGenerated && !loading && captions.length > 0 && (
@@ -341,18 +338,10 @@ export default function GeneratePage() {
               onRegenerate={handleRegenerate}
               onEdit={handleEdit}
             />
-            <div className="w-[100%] h-px bg-border my-6" />
 
             <div className="w-[100%] h-px bg-border my-6" />
-            <h3 className="text-lg font-semibold mb-2 text-[var(--color-primary)]">
-              People Generated Captions
-            </h3>
-            <CaptionGrid
-              captions={TOP_CAPTIONS}
-              onCopy={handleCopy}
-              onSave={handleSave}
-              onEdit={() => {}}
-            />
+            <PeopleGeneratedCption />
+            <div className="w-[100%] h-px bg-border my-6" />
             {/* Premium Captions Section */}
             <PremiumCaption />
           </>
