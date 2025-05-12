@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Copy, Save, Pencil } from "lucide-react";
 import EditCaptionDialog from "@/components/edit-caption-dialog";
+import { toaster } from "@/utils/toaster";
+import { saveCaption } from "@/utils/save-caption";
 
 export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
   const [editIdx, setEditIdx] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [savingIdx, setSavingIdx] = useState(null);
 
   const handleEditClick = (idx) => {
     setEditIdx(idx);
@@ -22,6 +25,25 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
   const handleDialogClose = () => {
     setEditIdx(null);
     setEditValue("");
+  };
+
+  const handleSave = async (text) => {
+    const captionObj = captions.find((c) =>
+      typeof c === "string" ? c === text : c.text === text || c.caption === text
+    );
+    const platform =
+      typeof captionObj === "object" ? captionObj.platform : undefined;
+    const tone = typeof captionObj === "object" ? captionObj.tone : undefined;
+    const idx = captions.indexOf(captionObj);
+    setSavingIdx(idx);
+    try {
+      const res=await saveCaption(text, platform, tone);
+      toaster(res.response||"Caption saved!");
+    } catch (e) {
+      toaster("Failed to save caption");
+    } finally {
+      setSavingIdx(null);
+    }
   };
 
   return (
@@ -67,13 +89,20 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
                   <span className="hidden sm:inline">Copy</span>
                 </button>
                 <button
-                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors"
+                  className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors disabled:opacity-60"
                   title="Save"
-                  onClick={() => onSave(text)}
+                  onClick={() => handleSave(text)}
                   aria-label="Save caption"
+                  disabled={savingIdx === idx}
                 >
-                  <Save size={18} />
-                  <span className="hidden sm:inline">Save</span>
+                  {savingIdx === idx ? (
+                    <span className="animate-pulse">Saving...</span>
+                  ) : (
+                    <>
+                      <Save size={18} />
+                      <span className="hidden sm:inline">Save</span>
+                    </>
+                  )}
                 </button>
                 <button
                   className="flex items-center gap-1 px-3 py-1 rounded-lg bg-transparent hover:bg-[var(--color-accent)] text-[var(--color-primary)] border border-transparent hover:border-[var(--color-border)] transition-colors"
