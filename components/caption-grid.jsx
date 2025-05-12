@@ -42,7 +42,7 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
         {captions.map((captionObj, idx) => {
           // Support both string and object for backward compatibility
           const text =
-            typeof captionObj === "string" ? captionObj : captionObj.text;
+            typeof captionObj === "string" ? captionObj : captionObj.text || captionObj.caption;
           const platform =
             typeof captionObj === "object" ? captionObj.platform : undefined;
           const tone =

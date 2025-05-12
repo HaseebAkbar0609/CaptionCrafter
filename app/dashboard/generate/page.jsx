@@ -53,7 +53,7 @@ export default function GeneratePage() {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [captions, setCaptions] = useState([]);
-  const [visibility, setVisibility] = useState("public");
+  // const [visibility, setVisibility] = useState("public");
   const [hasGenerated, setHasGenerated] = useState(false);
   const loadingRef = useRef(null);
 
@@ -70,6 +70,7 @@ export default function GeneratePage() {
       platform: PLATFORMS[0],
       tone: TONES[0],
       useHashtags: false,
+      visibility: "public",
     },
   });
 
@@ -84,6 +85,8 @@ export default function GeneratePage() {
       ishashtags: data.useHashtags,
       visibility: data.visibility,
     };
+    // console.log("Payload:", payload);
+    // return
     if (loadingRef.current) {
       loadingRef.current.scrollIntoView({
         behavior: "smooth",
@@ -114,22 +117,16 @@ export default function GeneratePage() {
         toaster("Error generating captions. Please try again.");
         return;
       }
-      if(Array.isArray(result.response)){
+      if (Array.isArray(result.response)) {
         const { response } = result;
-        const captionsDetails= response.map((caption) => ({
-          text: caption,
-          platform: data.platform,
-          tone: data.tone,
-        }));
-        setCaptions(captionsDetails);
-        
+
+        setCaptions(response);
+
         reset();
-      }else{
+      } else {
         toaster("Refine the Post or Idea and Try Again.");
         return;
       }
-     
-       
     } catch (error) {
       console.error(error);
       toaster("An unexpected error occurred. Please try again.");
@@ -198,19 +195,18 @@ export default function GeneratePage() {
                 <button
                   type="button"
                   className={`pointer-events-auto flex items-center gap-1 rounded-full px-3 py-1 transition-colors shadow font-medium text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600`}
-                  title={visibility === "public" ? "Public" : "Private"}
+                  title={
+                    watch("visibility") === "public" ? "Public" : "Private"
+                  }
                   onClick={() => {
-                    setVisibility((v) =>
-                      v === "public" ? "private" : "public"
-                    );
                     setValue(
                       "visibility",
-                      visibility === "public" ? "private" : "public"
+                      watch("visibility") === "public" ? "private" : "public"
                     );
                   }}
                   style={{ minWidth: 70, justifyContent: "center" }}
                 >
-                  {visibility === "public" ? (
+                  {watch("visibility") === "public" ? (
                     <>
                       <Unlock size={16} className="mr-1" />
                       Public
@@ -225,13 +221,20 @@ export default function GeneratePage() {
               </div>
               <input
                 type="hidden"
-                {...register("visibility")}
-                value={visibility}
+                {...register("visibility", {
+                  required: "Visibility is required",
+                })}
+                value={watch("visibility")}
               />
             </div>
             {errors.input && (
               <span className="text-red-500 text-xs">
                 {errors.input.message}
+              </span>
+            )}
+            {errors.visibility && (
+              <span className="text-red-500 text-xs">
+                {errors.visibility.message}
               </span>
             )}
           </div>
