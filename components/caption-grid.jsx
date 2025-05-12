@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Copy, Save, Pencil, ThumbsUp } from "lucide-react";
-
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import EditCaptionDialog from "@/components/edit-caption-dialog";
 
 export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
   const [editIdx, setEditIdx] = useState(null);
@@ -109,27 +107,13 @@ export default function CaptionGrid({ captions = [], onCopy, onSave, onEdit }) {
           );
         })}
       </div>
-      <Dialog open={editIdx !== null} onOpenChange={handleDialogClose}>
-        <DialogContent>
-          <DialogTitle>Edit Caption</DialogTitle>
-          <p className="mb-2 text-sm text-muted-foreground">
-            Update your caption below and click Save to apply changes.
-          </p>
-          <textarea
-            className="w-full p-2 border rounded mb-4 resize-none"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            rows={5}
-            style={{ minHeight: 100 }}
-          />
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleDialogClose}>
-              Cancel
-            </Button>
-            <Button onClick={handleDialogSave}>Save</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <EditCaptionDialog
+        open={editIdx !== null}
+        value={editValue}
+        onChange={(e) => setEditValue(e.target.value)}
+        onSave={handleDialogSave}
+        onCancel={handleDialogClose}
+      />
     </div>
   );
 }

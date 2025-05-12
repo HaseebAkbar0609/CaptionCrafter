@@ -13,9 +13,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toaster } from "@/utils/toaster";
 import { useTheme } from "next-themes";
-import {  Lock, Unlock, Sparkles, UnlockIcon } from "lucide-react";
+import { Lock, Unlock, Sparkles } from "lucide-react";
 import CaptionGrid from "@/components/caption-grid";
-import Link from "next/link";
 import PremiumCaption from "@/components/premium-caption";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
@@ -47,7 +46,6 @@ const TOP_CAPTIONS = [
     tone: TONES[4],
   },
 ];
-
 
 export default function GeneratePage() {
   const { theme } = useTheme();
@@ -123,22 +121,24 @@ export default function GeneratePage() {
 
   const handleCopy = (caption) => {
     navigator.clipboard.writeText(caption);
-    toaster("Caption copied to clipboard!", theme);
+    toaster("Caption copied to clipboard!");
   };
 
   const handleSave = (caption) => {
     // Placeholder: Save logic
-    alert("Saved: " + caption);
+    toaster("Caption saved!");
   };
 
   const handleRegenerate = (idx) => {
     const data = watch();
     const newCaption = `${data.input} (Regenerated ${idx + 1})`;
     setCaptions((prev) => prev.map((c, i) => (i === idx ? newCaption : c)));
+    toaster("Caption regenerated!");
   };
 
   const handleEdit = (idx) => {
     setEditIdx(idx);
+    toaster("Edit caption mode enabled.");
   };
 
   return (
@@ -316,7 +316,7 @@ export default function GeneratePage() {
               onEdit={() => {}}
             />
             <div className="w-[100%] h-px bg-border my-6" />
-          <PremiumCaption/>
+            <PremiumCaption />
           </>
         )}
         {/* Show loading state */}
@@ -354,7 +354,7 @@ export default function GeneratePage() {
               onEdit={() => {}}
             />
             {/* Premium Captions Section */}
-           <PremiumCaption/>
+            <PremiumCaption />
           </>
         )}
       </div>

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -10,6 +9,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import EditCaptionDialog from "@/components/edit-caption-dialog";
+import { toaster } from "@/utils/toaster";
 
 const MOCK_CAPTIONS = [
   {
@@ -102,6 +103,7 @@ export default function SavedCaptionsPage() {
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
+    toaster("Caption copied to clipboard!");
   };
   const handleEdit = (id, text) => {
     setEditId(id);
@@ -113,9 +115,11 @@ export default function SavedCaptionsPage() {
     );
     setEditId(null);
     setEditText("");
+    toaster("Caption updated successfully!");
   };
   const handleDelete = (id) => {
     setCaptions(captions.filter((c) => c.id !== id));
+    toaster("Caption deleted.");
   };
 
   // Reset pagination if filters change
@@ -181,25 +185,9 @@ export default function SavedCaptionsPage() {
           <ul className="divide-y divide-border">
             {paginated.map((c) => (
               <li key={c.id} className="py-4 flex items-center gap-3">
-                {editId === c.id ? (
-                  <Input
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    className="flex-1"
-                    autoFocus
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleEditSave(c.id);
-                      if (e.key === "Escape") {
-                        setEditId(null);
-                        setEditText("");
-                      }
-                    }}
-                  />
-                ) : (
-                  <span className="flex-1 text-[var(--color-muted-foreground)] break-words">
-                    {c.text}
-                  </span>
-                )}
+                <span className="flex-1 text-[var(--color-muted-foreground)] break-words">
+                  {c.text}
+                </span>
                 <span className="text-xs text-muted-foreground min-w-[80px] text-right">
                   {c.platform} / {c.tone}
                 </span>
@@ -211,24 +199,14 @@ export default function SavedCaptionsPage() {
                 >
                   Copy
                 </Button>
-                {editId === c.id ? (
-                  <Button
-                    size="sm"
-                    onClick={() => handleEditSave(c.id)}
-                    title="Save"
-                  >
-                    Save
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(c.id, c.text)}
-                    title="Edit"
-                  >
-                    Edit
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleEdit(c.id, c.text)}
+                  title="Edit"
+                >
+                  Edit
+                </Button>
                 <Button
                   size="sm"
                   onClick={() => handleDelete(c.id)}
@@ -262,6 +240,16 @@ export default function SavedCaptionsPage() {
           </Button>
         </div>
       </div>
+      <EditCaptionDialog
+        open={editId !== null}
+        value={editText}
+        onChange={(e) => setEditText(e.target.value)}
+        onSave={() => handleEditSave(editId)}
+        onCancel={() => {
+          setEditId(null);
+          setEditText("");
+        }}
+      />
     </div>
   );
 }
