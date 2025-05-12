@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toaster } from "@/utils/toaster";
 import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
+import { Loader } from "lucide-react";
 
 export function LoginForm({ className, ...props }) {
   const { theme } = useTheme();
@@ -125,7 +126,7 @@ export function LoginForm({ className, ...props }) {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Login"}
+            {isSubmitting ? <div className="flex gap-2 items-center"><Loader/>Logging in...</div> : "Login"}
           </Button>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">

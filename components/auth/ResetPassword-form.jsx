@@ -10,6 +10,7 @@ import { resetPasswordWithCode } from "@/utils/firebase_auth";
 import { useSearchParams, redirect } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
+import { Loader } from "lucide-react";
 
 export function ResetPasswordForm({ className, ...props }) {
   const { theme } = useTheme();
@@ -105,7 +106,7 @@ export function ResetPasswordForm({ className, ...props }) {
           )}
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Resetting..." : "Reset Password"}
+          {isSubmitting ? <div className="flex gap-2 items-center"><Loader/>Resetting...</div> : "Reset Password"}
         </Button>
       </div>
       <div className="text-center text-sm">

@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useTheme } from "next-themes";
 import { toaster } from "@/utils/toaster";
 import { resetPasswordWithEmail } from "@/utils/firebase_auth";
+import { Loader } from "lucide-react";
 
 export function ForgotPasswordForm({ className, ...props }) {
   const { theme } = useTheme();
@@ -68,7 +69,7 @@ export function ForgotPasswordForm({ className, ...props }) {
           )}
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Send Reset Link"}
+          {isSubmitting ? <div className="flex gap-2 items-center"><Loader/>Sending...</div> : "Send Reset Link"}
         </Button>
       </div>
       <div className="text-center text-sm">
