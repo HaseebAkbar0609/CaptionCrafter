@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import auth from "@/config/firebase";
 import { toaster } from "@/utils/toaster";
+import { Loader, Loader2 } from "lucide-react";
 
 export default function AccountPage() {
   const profileForm = useForm({
@@ -124,7 +125,7 @@ export default function AccountPage() {
                 disabled={profileForm.formState.isSubmitting}
               >
                 {profileForm.formState.isSubmitting
-                  ? "Saving..."
+                  ? <div className="flex gap-2 items-center"><Loader/>Saving...</div>
                   : "Save Changes"}
               </Button>
             </CardFooter>
@@ -189,7 +190,7 @@ export default function AccountPage() {
                 disabled={passwordForm.formState.isSubmitting}
               >
                 {passwordForm.formState.isSubmitting
-                  ? "Saving..."
+                  ? <div className="flex gap-2 items-center"><Loader/>Saving...</div>
                   : "Update Password"}
               </Button>
             </CardFooter>

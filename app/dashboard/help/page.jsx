@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { toaster } from "@/utils/toaster";
+import { Loader } from "lucide-react";
 
 const FAQS = [
   {
@@ -174,7 +175,7 @@ function ContactForm() {
           )}
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Send"}
+          {isSubmitting ? <div className="flex gap-2 items-center"><Loader/>Sending...</div> : "Send"}
         </Button>
       </div>
     </form>
