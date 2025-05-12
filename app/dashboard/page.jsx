@@ -79,7 +79,7 @@ export default function Page() {
       <div className="flex flex-col md:flex-row gap-4 mb-10">
         <Button
           asChild
-          className="flex-1 text-lg font-semibold py-6"
+          className="flex-1 text-lg font-semibold py-3 md:py-6"
           variant="default"
         >
           <Link
@@ -92,7 +92,7 @@ export default function Page() {
         </Button>
         <Button
           asChild
-          className="flex-1 text-lg font-semibold py-6"
+          className="flex-1 text-lg font-semibold py-3 md:py-6"
           variant="secondary"
         >
           <Link
