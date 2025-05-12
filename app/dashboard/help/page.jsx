@@ -205,7 +205,7 @@ export default function HelpPage() {
 
       <div className="w-[100%] h-px bg-border my-10" />
       <section>
-        <h2 className="text-xl font-semibold mb-3">Contact Us</h2>
+        
         <ContactForm />
       </section>
     </div>
