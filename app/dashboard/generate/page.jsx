@@ -17,6 +17,7 @@ import { Lock, Unlock, Sparkles } from "lucide-react";
 import CaptionGrid from "@/components/caption-grid";
 import PremiumCaption from "@/components/premium-caption";
 import PeopleGeneratedCption from "@/components/people-generated-caption";
+import auth from "@/config/firebase";
 
 const PLATFORMS = ["Instagram", "LinkedIn", "Twitter"];
 const TONES = ["Funny", "Professional", "Relatable", "Motivational", "Casual"];
@@ -73,51 +74,68 @@ export default function GeneratePage() {
   });
 
   // Mock AI generation
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     setHasGenerated(true);
-    reset();
-    setTimeout(() => {
-      setCaptions([
-        {
-          text: `🌟 ${data.input} - ${data.platform} (${data.tone}) #inspired`,
-          platform: data.platform,
-          tone: data.tone,
-        },
-        {
-          text: `"${data.input}" | Perfect for ${data.platform}!`,
-          platform: data.platform,
-          tone: data.tone,
-        },
-        {
-          text: `${data.input} — ${data.tone} vibes only!`,
-          platform: data.platform,
-          tone: data.tone,
-        },
-        {
-          text:
-            `Level up your ${data.platform} with: ${data.input}` +
-            (data.useHashtags ? " #trending" : ""),
-          platform: data.platform,
-          tone: data.tone,
-        },
-        {
-          text: `Why not: ${data.input}? (${data.tone})`,
-          platform: data.platform,
-          tone: data.tone,
-        },
-      ]);
-      setLoading(false);
-    }, 5000);
-    // Scroll to loading animation
-    setTimeout(() => {
-      if (loadingRef.current) {
-        loadingRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+    const payload = {
+      prompt: data.input,
+      platform: data.platform,
+      tone: data.tone,
+      ishashtags: data.useHashtags,
+      visibility: data.visibility,
+    };
+    if (loadingRef.current) {
+      loadingRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      // console.log("Token:", token);
+      if (!token) {
+        toaster("Please log in to generate captions.");
+        return;
       }
-    }, 50);
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/api/generate-caption",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      const result = await response.json();
+      console.log(result);
+      if (response.status !== 200) {
+        toaster("Error generating captions. Please try again.");
+        return;
+      }
+      if(Array.isArray(result.response)){
+        const { response } = result;
+        const captionsDetails= response.map((caption) => ({
+          text: caption,
+          platform: data.platform,
+          tone: data.tone,
+        }));
+        setCaptions(captionsDetails);
+        
+        reset();
+      }else{
+        toaster("Refine the Post or Idea and Try Again.");
+        return;
+      }
+     
+       
+    } catch (error) {
+      console.error(error);
+      toaster("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCopy = (caption) => {
@@ -332,7 +350,7 @@ export default function GeneratePage() {
         {hasGenerated && !loading && captions.length > 0 && (
           <>
             <CaptionGrid
-              captions={captions.slice(0, 3)}
+              captions={captions}
               onCopy={handleCopy}
               onSave={handleSave}
               onRegenerate={handleRegenerate}
