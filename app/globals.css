@@ -117,10 +117,8 @@ button {
 .Toastify__toast {
   border: 2px solid var(--primary-border);
   border-radius: 8px;
-
   font-family: "Poppins", Arial, sans-serif;
   /* font-size: 1rem; */
-
   font-weight: 500;
   padding: 12px 18px;
 }
