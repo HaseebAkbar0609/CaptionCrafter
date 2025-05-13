@@ -209,7 +209,7 @@ export default function HelpPage() {
             controls
             poster="/help-thumb.png"
           >
-            <source src="/help-demo.mp4" type="video/mp4" />
+            <source src="https://youtu.be/N1JTC3zveLI" type="video/mp4" />
             Sorry, your browser does not support embedded videos.
           </video>
           <p className="text-sm text-muted-foreground">
