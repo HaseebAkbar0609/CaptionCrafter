@@ -175,7 +175,14 @@ function ContactForm() {
           )}
         </div>
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? <div className="flex gap-2 items-center"><Loader/>Sending...</div> : "Send"}
+          {isSubmitting ? (
+            <div className="flex gap-2 items-center">
+              <Loader />
+              Sending...
+            </div>
+          ) : (
+            "Send"
+          )}
         </Button>
       </div>
     </form>
@@ -204,14 +211,16 @@ export default function HelpPage() {
           How to Use Caption Crafter
         </h2>
         <div className="flex flex-col items-center gap-7">
-          <video
-            className="rounded-lg border w-full max-w-md"
-            controls
-            poster="/help-thumb.png"
-          >
-            <source src="https://youtu.be/N1JTC3zveLI" type="video/mp4" />
-            Sorry, your browser does not support embedded videos.
-          </video>
+          <div className="w-full max-w-2xl aspect-video rounded-lg border overflow-hidden">
+            <iframe
+              className="w-full h-full rounded-xl shadow-lg"
+              src="https://www.youtube.com/embed/N1JTC3zveLI"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
           <p className="text-sm text-muted-foreground">
             Watch this quick demo to see how to generate, edit, and save
             captions.
