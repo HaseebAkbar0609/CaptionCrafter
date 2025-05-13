@@ -7,6 +7,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function page() {
   // Simulate user plan status (replace with real logic)
@@ -57,7 +58,7 @@ export default function page() {
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base font-semibold py-4 rounded-md"
                 asChild
               >
-                <a href="/dashboard/pricing/payment">Upgrade Now</a>
+                <Link href="/dashboard/pricing/payment">Upgrade Now</Link>
               </Button>
             )}
           </CardFooter>
