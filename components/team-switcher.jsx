@@ -8,8 +8,20 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Captions } from "lucide-react"
+import auth from "@/config/firebase";
 
 export function TeamSwitcher() {
+
+  const [userPlan, setUserPlan] = React.useState("Free");
+  React.useEffect(() => {
+    const fetchUserPlan = async () => {
+      const { getUserPlan } = await import("@/utils/_get-plan");
+      const userId = auth.currentUser?.uid;
+      const plan = await getUserPlan(userId);
+      setUserPlan(plan);
+    };
+    fetchUserPlan();
+  }, []);
 
 
   return (
@@ -24,7 +36,7 @@ export function TeamSwitcher() {
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-medium">Caption Crafter.</span>
-            <span className="truncate text-xs">Free</span>
+            <span className="truncate text-xs">{userPlan+" Plan"}</span>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
