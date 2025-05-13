@@ -113,6 +113,10 @@ export default function GeneratePage() {
       );
       const result = await response.json();
       console.log(result);
+      if(response.status === 400) {
+        toaster(result.error);
+        return
+      }
       if (response.status !== 200) {
         toaster("Error generating captions. Please try again.");
         return;

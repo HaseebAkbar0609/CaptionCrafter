@@ -17,6 +17,7 @@ export async function signInWithGoogle() {
         plan: "Free",
         remaingCredits: 5,
         usedCredits: 0,
+        lastUsed: new Date().toISOString(),
         planStartDate: new Date().toISOString(),
         createdAt: new Date().toISOString()
       });
@@ -53,6 +54,7 @@ export async function signupWithEmail(email, password) {
       plan: "Free",
       remaingCredits: 5,
       usedCredits: 0,
+      lastUsed: new Date().toISOString(),
       planStartDate: new Date().toISOString(),
       createdAt: new Date().toISOString()
     });
