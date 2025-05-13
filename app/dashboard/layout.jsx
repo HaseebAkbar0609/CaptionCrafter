@@ -61,7 +61,10 @@ export default function Layout({ children }) {
     {
       title: "Logout",
       url: "/dashboard/logout",
-    },
+    },{
+      title:["Upgrade to Pro","Payment"],
+      url:"/dashboard/pricing/payment"
+    }
   ];
   useEffect(() => {
     let paths = pathname.split("/");
@@ -113,7 +116,18 @@ export default function Layout({ children }) {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
+                  {Array.isArray(crumb) ? (
+                    crumb.map((item, index) => (
+                      <span key={index}>
+                        <BreadcrumbLink >
+                          {item}
+                        </BreadcrumbLink>
+                        {index < crumb.length - 1 && " > "}
+                      </span>
+                    ))
+                  ) : (
                     <BreadcrumbPage>{crumb}</BreadcrumbPage>
+                  )}
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
