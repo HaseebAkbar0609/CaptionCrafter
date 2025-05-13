@@ -1,17 +1,27 @@
 // Helper for Google Auth with Firebase
-import auth, { googleProvider } from "../config/firebase";
+import auth,{ googleProvider, db } from "@/config/firebase";
 import { signInWithPopup, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 // Sign in with Google
 export async function signInWithGoogle() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    // The signed-in user info.
     const user = result.user;
-    // You can also access the Google Access Token via result._tokenResponse.oauthAccessToken
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        plan: "Free",
+        createdAt: new Date().toISOString()
+      });
+    }
+    console.log("User signed in successfully");
     return { user };
   } catch (error) {
-    // Handle Errors here.
+    console.error("Error signing in with Google: ", error);
     return { error };
   }
 }
@@ -33,6 +43,14 @@ export async function signupWithEmail(email, password) {
     const { createUserWithEmailAndPassword } = await import("firebase/auth");
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const user = result.user;
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      plan: "Free",
+      createdAt: new Date().toISOString()
+    });
+    console.log("User created successfully");
     return { user };
   } catch (error) {
     return { error };
@@ -42,7 +60,7 @@ export async function signupWithEmail(email, password) {
 // Sign out
 export async function signOutGoogle() {
   try {
-    await signOut(auth);
+    signOut(auth);
     return { success: true };
   } catch (error) {
     return { error };
