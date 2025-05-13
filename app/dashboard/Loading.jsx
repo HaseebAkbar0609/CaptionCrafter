@@ -1,20 +1,11 @@
-import { Skeleton } from "@/components/ui/skeleton";
+
+import { Loader } from "lucide-react";
 
 export default function Loading() {
   return (
-    <div className="flex h-screen p-3 gap-3 ">
-      {/* Sidebar skeleton */}
-      <Skeleton className="w-64  min-w-[16rem] rounded-2xl  bg-muted/50 flex flex-col" />
-
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col">
-        {/* Navbar skeleton */}
-        <Skeleton className="h-20 bg-muted/50 w-full rounded-2xl mb-2" />
-        <Skeleton className="h-full bg-muted/50 w-full rounded-2xl " />
-        {/* Body skeleton */}
-
-        {/* <Skeleton className="bg-muted/50 aspect-video rounded-xl w-full h-32 md:h-auto" /> */}
-      </div>
+    <div className="flex flex-col text-primary gap-2 h-screen w-screen items-center justify-center ">
+      <Loader className="animate-spin size-12 md:size-14" />
+      <h1 className="md:text-2xl text-xl font-semibold">Caption Crafter.</h1>
     </div>
   );
 }
