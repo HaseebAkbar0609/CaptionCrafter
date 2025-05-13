@@ -11,9 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Sparkles,
-  BadgeCheck,
-  PlusCircle,
+  BarChart2, // changed from BadgeCheck
+  CalendarCheck2, // new icon for daily limit
+  Coins, // new icon for credits left
   ArrowUpRight,
+  BadgeCheck,
   Info,
   Loader,
 } from "lucide-react";
@@ -59,12 +61,13 @@ export default function Page() {
           .catch((error) => {
             console.error("Error fetching user plan:", error);
           });
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
-      }); 
+      });
   }, []);
 
-  console.log(stats)
+  console.log(stats);
 
   return (
     <div className="max-w-4xl w-full mx-auto p-6 md:p-10">
@@ -92,7 +95,7 @@ export default function Page() {
       <div className="grid cursor-pointer grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
           <CardHeader className="flex flex-col items-center w-full gap-1 p-0 mb-2">
-            <BadgeCheck className="text-primary w-7 h-7 mb-1" />
+            <BarChart2 className="text-primary w-7 h-7 mb-1" />
             <CardDescription>Total Used Credits</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -109,7 +112,7 @@ export default function Page() {
         </Card>
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
           <CardHeader className="flex flex-col items-center w-full  gap-1 p-0 mb-2">
-            <BadgeCheck className="text-primary w-7 h-7 mb-1" />
+            <CalendarCheck2 className="text-primary w-7 h-7 mb-1" />
             <CardDescription>Daily Limit</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -126,7 +129,7 @@ export default function Page() {
         </Card>
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
           <CardHeader className="flex flex-col items-center w-full  gap-1 p-0 mb-2">
-            <PlusCircle className="text-accent w-7 h-7 mb-1" />
+            <Coins className="text-accent w-7 h-7 mb-1" />
             <CardDescription>Credits Left</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
