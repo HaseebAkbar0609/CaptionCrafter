@@ -1,5 +1,4 @@
 "use client";
-import PeopleGeneratedCption from "@/components/people-generated-caption";
 import auth from "@/config/firebase";
 import Link from "next/link";
 import {
@@ -16,24 +15,56 @@ import {
   PlusCircle,
   ArrowUpRight,
   Info,
+  Loader,
 } from "lucide-react";
-import { useEffect } from "react";
 import RecentGeneratedCption from "@/components/recent-generated-captions";
+import { getStats } from "@/utils/_get-stats";
+import React from "react";
+import { getUserPlan } from "@/utils/_get-plan";
 
 export default function Page() {
-  useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/test").then((res) => {
-      if (res.status === 200) {
-        console.log("Backend is up and running");
-      } else {
-        console.error("Backend is down");
-      }
-    });
+  const [loading, setLoading] = React.useState(true);
+  const [stats, setStats] = React.useState({
+    remaingCredits: 0,
+    usedCredits: 0,
+    plan: "Free",
+    dailyLimit: 5,
+  });
+  React.useEffect(() => {
+    getStats()
+      .then((data) => {
+        console.log("Stats data:", data);
+        setStats(data.response);
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
+        getUserPlan(auth.currentUser.uid)
+          .then((plan) => {
+            if (plan.toLowerCase() === "free") {
+              setStats({
+                remaingCredits: 0,
+                usedCredits: 0,
+                plan: "Free",
+                dailyLimit: 5,
+              });
+            } else {
+              setStats({
+                remaingCredits: "Unlimited",
+                usedCredits: 0,
+                plan: "Premium",
+                dailyLimit: "Unlimited",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching user plan:", error);
+          });
+      }).finally(() => {
+        setLoading(false);
+      }); 
   }, []);
-  // Placeholder stats
-  const captionsToday = 3;
-  const captionsWeek = 15;
-  const remainingCredits = 7;
+
+  console.log(stats)
 
   return (
     <div className="max-w-4xl w-full mx-auto p-6 md:p-10">
@@ -60,35 +91,53 @@ export default function Page() {
       </Card>
       <div className="grid cursor-pointer grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
-          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+          <CardHeader className="flex flex-col items-center w-full gap-1 p-0 mb-2">
             <BadgeCheck className="text-primary w-7 h-7 mb-1" />
-            <CardDescription>Captions Today</CardDescription>
+            <CardDescription>Total Used Credits</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <span className="text-3xl font-extrabold text-primary">
-              {captionsToday}
+              {loading ? (
+                <>
+                  <Loader className="animate-spin size-7" />
+                </>
+              ) : (
+                stats.usedCredits
+              )}
             </span>
           </CardContent>
         </Card>
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
-          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+          <CardHeader className="flex flex-col items-center w-full  gap-1 p-0 mb-2">
             <BadgeCheck className="text-primary w-7 h-7 mb-1" />
-            <CardDescription>This Week</CardDescription>
+            <CardDescription>Daily Limit</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <span className="text-3xl font-extrabold text-primary">
-              {captionsWeek}
+              {loading ? (
+                <>
+                  <Loader className="animate-spin size-7" />
+                </>
+              ) : (
+                stats.dailyLimit
+              )}
             </span>
           </CardContent>
         </Card>
         <Card className="flex flex-col items-center p-6 border-2 border-border rounded-xl hover:border-primary transition-colors">
-          <CardHeader className="flex flex-col items-center gap-1 p-0 mb-2">
+          <CardHeader className="flex flex-col items-center w-full  gap-1 p-0 mb-2">
             <PlusCircle className="text-accent w-7 h-7 mb-1" />
             <CardDescription>Credits Left</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <span className="text-3xl font-extrabold text-accent">
-              {remainingCredits}
+              {loading ? (
+                <>
+                  <Loader className="animate-spin size-7" />
+                </>
+              ) : (
+                stats.remaingCredits
+              )}
             </span>
           </CardContent>
         </Card>
