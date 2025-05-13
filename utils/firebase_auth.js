@@ -15,6 +15,9 @@ export async function signInWithGoogle() {
         uid: user.uid,
         email: user.email,
         plan: "Free",
+        remaingCredits: 5,
+        usedCredits: 0,
+        planStartDate: new Date().toISOString(),
         createdAt: new Date().toISOString()
       });
     }
@@ -48,6 +51,9 @@ export async function signupWithEmail(email, password) {
       uid: user.uid,
       email: user.email,
       plan: "Free",
+      remaingCredits: 5,
+      usedCredits: 0,
+      planStartDate: new Date().toISOString(),
       createdAt: new Date().toISOString()
     });
     console.log("User created successfully");
